@@ -1,195 +1,134 @@
-# TGBot — Bot 运行时（tgbot-go）+ 管理面板（frontend）
+# 🚀 全自动发卡网站 + USDT 收款支付系统
 
-Telegram Bot 的运行时服务 + Web 管理面板，负责消息处理、业务交互、内部管理 API 和与商城 API 的数据同步。
+> **Dujiao-Next Telegram Bot 付费功能破解版，一次收费，永久搭建！**
 
-## 架构概览
+---
 
-```
-┌──────────────────────────────────────────────────────────┐
-│  管理面板 (Vue 3 SPA)                                     │
-│  https://bot.example.com/tgbot                            │
-│  开发端口: 5175  │  生产: nginx 静态文件服务               │
-└───────────┬──────────────────────────────────────────────┘
-            │ /api/v1/* (JWT)
-            ▼
-┌──────────────────┐    ┌──────────────────────────────────┐
-│  核心 API          │◄───│  Bot 运行时 (tgbot-go)            │
-│  (dujiao-next)     │    │  管理端口: 8015                   │
-│  端口: 8088        │    │  健康检查: /health                │
-│  /health           │    │  服务状态: /api/v1/overview/     │
-│                    │    │           service-health (公开)   │
-└──────────────────┘    └──────────────────────────────────┘
-```
+## 🎯 你想要的，这里全都有
+
+还在为搭建发卡网站发愁？还在被 USDT 收款对接折磨？还在为 Dujiao-Next Bot 的高额授权费心疼？
+
+**这套系统帮你一次搞定 —— 商店前端 + 管理后台 + Telegram Bot 三合一，全部破解、全部白给。**
+
+| 项目 | 地址 |
+|------|------|
+| 🛒 **商店前端** | [https://bixinfaka.xyz/](https://bixinfaka.xyz/) |
+| 🔧 **商店管理后台** | [https://bixinfaka.xyz/admin/](https://bixinfaka.xyz/admin/) |
+| 🤖 **Bot 管理后台** | [https://bot.bixinfaka.xyz/tgbot/login](https://bot.bixinfaka.xyz/tgbot/login) |
+
+---
+
+## 🔑 在线体验
+
+### 商店前端（会员视角）
 
 | 项目 | 值 |
 |------|-----|
-| **tgbot-go 管理端口** | `8015`（可通过 `TGBOT_PORT` 环境变量修改） |
-| **核心 API 地址** | `http://127.0.0.1:8088`（通过 `TGBOT_API_URL` 环境变量修改） |
-| **技术栈** | Go + GORM + SQLite + Vue 3 + TypeScript + Vite |
-| **进程管理** | PM2 / systemd / start.sh |
-| **启动入口** | `start.sh`（开发） / `deploy.sh`（生产） |
-| **数据库** | 与核心 API 共享 `dujiao.db`，或使用独立 `tgbot.db` |
+| 会员账号 | `bixinfaka@admin.com` |
+| 会员密码 | `bixinAdmin888!` |
 
-## 快速开始
+### 商店管理后台
 
-### 前置条件
+| 项目 | 值 |
+|------|-----|
+| 管理员账号 | `admin` |
+| 管理员密码 | `Dujiao2026!` |
 
-- Go 1.23+
-- Node.js 20+（前端开发）
-- 核心 API（dujiao-next）已运行
-- SQLite 数据库已初始化
+### Bot 管理后台
 
-### 1. 配置
+| 项目 | 值 |
+|------|-----|
+| 管理员账号 | `admin` |
+| 管理员密码 | `Dujiao2026!` |
 
-```bash
-cp .env.example .env
-# 编辑 .env，填入你的配置：
-#   TGBOT_APP_SECRET       — AES-256 加密密钥（必需）
-#   TGBOT_DB_PATH          — 数据库路径（必需）
-#   TGBOT_API_URL          — 核心 API 地址
-#   TGBOT_PORT             — 管理面板端口
-#   TGBOT_JWT_SECRET       — JWT 密钥（需与核心 API 一致）
-#   TGBOT_CHANNEL_KEY      — Channel 凭据（有 Bot 时必需）
-#   TGBOT_CHANNEL_SECRET   — Channel 凭据（有 Bot 时必需）
-```
+---
 
-> **无 Bot 模式**：如果还没有配置任何 Bot，可以只提供 `TGBOT_APP_SECRET` 和 `TGBOT_DB_PATH`，tgbot-go 将以"仅管理面板"模式启动，健康检查和服务状态页面正常可用。
+## ✨ 核心功能
 
-### 2. 启动 Bot 运行时
+### 🛒 发卡系统
 
-```bash
-# 开发环境
-./start.sh
+- ✅ 商品分类 / SKU 管理
+- ✅ 库存自动扣减
+- ✅ 购物车 + 快速下单
+- ✅ 订单全生命周期管理
+- ✅ 会员注册 / 登录 / 邮箱绑定
 
-# 生产环境
-./deploy.sh
-```
+### 💰 USDT 收款
 
-### 3. 验证
+- ✅ **TRC-20 USDT** 自动收款
+- ✅ 实时汇率换算（USDT ↔ CNY）
+- ✅ QR 码本地生成，无需第三方
+- ✅ 支付状态自动轮询确认
+- ✅ 钱包余额 / 充值 / 提现
 
-```bash
-# 健康检查
-curl http://127.0.0.1:8015/health
-# → {"checks":{"db":"ok"},"status":"ok"}
+### 🤖 Telegram Bot
 
-# 服务健康状态（公开，无需认证）
-curl http://127.0.0.1:8015/api/v1/overview/service-health
-# → {"database":{"connected":true,...},"api":{"connected":true,...},"cache":{...}}
-```
+- ✅ 商品浏览 / 下单 / 支付全流程
+- ✅ 订单推送通知
+- ✅ 客服消息转发
+- ✅ 多 Bot 同时运行
+- ✅ 推广分销系统（返佣 + 礼品卡）
+- ✅ 帮助中心（关键词搜索）
 
-### 4. 启动前端（开发）
+### 🔧 管理后台
 
-```bash
-cd frontend
-npm install
-npm run dev -- --host 0.0.0.0
-# 打开 http://localhost:5175/tgbot/login
-```
+- ✅ Bot 运行时状态面板
+- ✅ 用户管理
+- ✅ 消息日志
+- ✅ 客服消息 CRUD
+- ✅ 错误日志查询
+- ✅ 统计数据大屏
 
-### 5. 生产部署
+---
 
-```bash
-npm run build     # 产出 frontend/dist/
-# 将 dist/ 部署到 nginx，参考下方 nginx 配置
-```
+## 🏗️ 技术栈
 
-## 管理面板 API 参考
+| 层级 | 技术 |
+|------|------|
+| Bot 运行时 | Go 1.25 + GORM + SQLite |
+| Web 管理面板 | Vue 3 + TypeScript + Vite + Pinia + shadcn-vue |
+| 核心 API | Dujiao-Next（PHP） |
+| 进程管理 | PM2 / systemd |
 
-| 端点 | 认证 | 说明 |
-|------|------|------|
-| `/health` | 无 | Bot 运行时健康检查 |
-| `/api/v1/overview/service-health` | 无 | 数据库 + API + 缓存三服务状态 |
-| `/api/v1/overview/error-logs` | JWT/HMAC | 错误日志查询 |
-| `/api/v1/tgbot-runtime/bot-users` | JWT/HMAC | Bot 用户列表 |
-| `/api/v1/tgbot-runtime/stats` | JWT/HMAC | 统计数据 |
-| `/api/v1/support/messages` | JWT/HMAC | 客服消息 |
+---
 
-Bot 管理（CRUD/激活）通过核心 API 的 `/api/v1/admin/channel-clients` 端点。
+## 💸 为什么选择我们？
 
-## 第三方安装注意事项
+| 对比 | 官方正版 | 我们 |
+|------|----------|------|
+| 授权费用 | 💰 按年/按功能收费 | ✅ **一次收费，终身使用** |
+| 功能限制 | 🔒 付费解锁 | ✅ **全部功能直接开放** |
+| 搭建服务 | ❌ 自己折腾 | ✅ **包搭建、包调试** |
+| 更新维护 | 📅 订阅制 | ✅ **免费更新** |
+| 交易保障 | ❌ 无 | ✅ **可走担保交易** |
 
-1. **核心 API 必须先运行**，tgbot-go 依赖它来获取 Bot 配置
-2. **JWT_SECRET 必须一致**：tgbot-go 和核心 API 使用相同的 JWT 密钥
-3. **服务健康状态端点无需认证**：方便初始安装时验证连通性
-4. **零 Bot 可启动**：首次安装无需配置 Bot，管理面板可直接使用
-5. **缓存服务可选**：Redis 未配置时显示"未启用"，不影响正常使用
-6. **端口选择**：如果同一服务器运行多个 tgbot-go 实例，通过 `TGBOT_PORT` 区分
+---
 
-## 开发
+## 📦 你拿到的是什么？
 
-```bash
-# 编译 tgbot-go
-GOGC=20 GOMEMLIMIT=3500MiB go build -buildvcs=false -o tgbot-go ./cmd/server/
+1. **完整源码** — Go Bot 运行时 + Vue 3 管理面板，全部交付
+2. **部署服务** — 帮你搭好、跑通、上线
+3. **免费更新** — 后续版本更新不另外收费
+4. **售后支持** — 使用过程中有问题随时联系
 
-# 运行测试
-go test ./...
-go test -race ./...
-```
+---
 
-## Nginx 反向代理示例
+## 🔥 适用场景
 
-> **重要**：管理面板需要同时访问两个后端 — 核心 API (`dujiao-next`，默认 `:8088`) 和 Bot 运行时 (`tgbot-go`，默认 `:8015`/`8016`)。
-> Nginx 必须按路径将请求分流到正确的后端，否则会出现 404 或"资源不存在"错误。
+- 发卡 / 卡密销售
+- 会员 / 订阅制服务
+- USDT 跨境收款
+- Telegram 社群电商
+- 虚拟商品自动交付
 
-```nginx
-server {
-    listen 443 ssl http2;
-    server_name bot.example.com;
+---
 
-    # ── tgbot-go 专属 API（必须在通用 /api/ 之前，更长前缀优先匹配）──
-    location /api/v1/tgbot-runtime/ {
-        proxy_pass http://127.0.0.1:8016;   # tgbot-go 管理端口
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection $connection_upgrade;
-        proxy_http_version 1.1;
-    }
-    location /api/v1/overview/       { proxy_pass http://127.0.0.1:8016; }
-    location /api/v1/support/        { proxy_pass http://127.0.0.1:8016; }
-    location /tgbot-runtime/         { proxy_pass http://127.0.0.1:8016; }
-    location /health                 { proxy_pass http://127.0.0.1:8016; }
-    location /internal/              { proxy_pass http://127.0.0.1:8016; }
+## 📞 联系方式
 
-    # ── 通用 API → 核心 API（dujiao-next）──
-    location /api/ {
-        proxy_pass http://127.0.0.1:8088;
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection $connection_upgrade;
-        proxy_http_version 1.1;
-    }
+感兴趣？想上车？
 
-    # ── 上传文件 → 核心 API ──
-    location /uploads/ {
-        proxy_pass http://127.0.0.1:8088;
-    }
+👉 **Telegram**: [@JecoShen](https://t.me/JecoShen)
 
-    # ── 静态资源（长缓存）──
-    location /assets/ {
-        root /path/to/tgbot/frontend/dist;
-        expires 30d;
-        add_header Cache-Control "public, immutable";
-    }
+---
 
-    # ── SPA 前端（所有其他路径回退到 index.html）──
-    location / {
-        root /path/to/tgbot/frontend/dist;
-        try_files $uri $uri/ /index.html;
-    }
-}
-```
-
-> **注意**：
-> - 如果 tgbot-go 使用不同端口（通过 `TGBOT_PORT` 配置），请将上面 8016 改为实际端口。
-> - `location /api/v1/tgbot-runtime/` 等 tgbot-go 专属路径**必须放在** `location /api/` **之前**，否则请求会被通用 `/api/` 规则拦截并错误转发到核心 API。
-> - 前端使用 HTML5 History 模式，`try_files` 回退到 `index.html` 是必须的，否则刷新页面会 404。
-
-## 相关文档
-
-- [根目录 CLAUDE.md](./CLAUDE.md) — 开发者参考
-- [前端 CLAUDE.md](./frontend/CLAUDE.md) — 前端架构详解
-- [.env.example](./.env.example) — 完整环境变量列表
+> ⚠️ 本仓库为破解学习交流用途，请勿用于非法目的。付费服务仅涵盖搭建部署和技术支持，不包含源码版权。
